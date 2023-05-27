@@ -6,7 +6,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
-// Импорт модели user
+// Импорт модели movie
 const Movie = require('../models/movie');
 
 // Импорт статус-кодов ошибок
