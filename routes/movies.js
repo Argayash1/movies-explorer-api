@@ -17,7 +17,7 @@ const {
 // Роутеры
 router.get('/', getMovies);
 
-router.post('/', createMovie);
+router.post('/', movieDataValidator, createMovie);
 
 router.delete('/:_id', movieIdValidator, deleteMovieById);
 

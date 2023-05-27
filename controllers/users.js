@@ -88,6 +88,7 @@ const logout = (req, res) => {
 const updateUserData = (req, res, next) => {
   const { _id: userId } = req.user;
   const { email, name } = req.body;
+
   // обновим имя найденного по _id пользователя
   User.findByIdAndUpdate(
     userId,

@@ -59,7 +59,7 @@ const createMovie = (req, res, next) => {
       if (err instanceof ValidationError) {
         const errorMessage = Object.values(err.errors)
           .map((error) => error.message)
-          .join(' ');
+          .join(', ');
         next(new BadRequestError(`Некорректные данные: ${errorMessage}`));
       } else {
         next(err);
