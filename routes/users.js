@@ -15,6 +15,6 @@ const {
 // Роутеры
 router.get('/me', getCurrentUserInfo);
 
-router.patch('/me', userDataValidator, updateUserData);
+router.patch('/me', updateUserData);
 
 module.exports = router; // экспортировали этот роутер

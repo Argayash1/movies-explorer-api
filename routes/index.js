@@ -1,7 +1,7 @@
 // Импорт роутеров
 const router = require('express').Router(); // импортируем роутер из express
 const users = require('./users'); // импортируем роутер users.js
-// const movies = require('./movies'); // импортируем роутер movies.js
+const movies = require('./movies'); // импортируем роутер movies.js
 
 // Импорт миддлвэра для авторизации
 const auth = require('../middlewares/auth');
@@ -17,9 +17,9 @@ const { createUserValidator, loginValidator } = require('../middlewares/validato
 router.post('/signup', createUserValidator, createUser); // добавили роутер для регистрации
 router.post('/signin', loginValidator, login); // добавили роутеры для авторизации
 
-// роуты, которым авторизация нужна - users и cards
+// роуты, которым авторизация нужна - users и movies
 router.use('/users', auth, users); // добавили роутеры для пользователей
-// router.use('/cards', auth, movies); // добавили роутеры для фильмов
+router.use('/movies', auth, movies); // добавили роутеры для фильмов
 router.get('/signout', auth, logout); // добавили роутер для выхода из системы (очищения куки)
 
 // роут для запросов по несуществующим URL

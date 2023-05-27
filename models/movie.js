@@ -46,7 +46,7 @@ const movieSchema = new mongoose.Schema(
         validator(url) {
           return regEx.test(url);
         },
-        message: 'ссылка не соответствует формату', // когда validator вернёт false, будет использовано это сообщение
+        message: 'ссылка не соответствует формату', // тогда validator вернёт false, будет использовано это сообщение
       },
     },
     thumbnail: {
@@ -74,7 +74,7 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: [true, 'не передано название фильма на русском языке'],
     },
-    nameEn: {
+    nameEN: {
       type: String,
       required: [true, 'не передано название фильма на английском языке'],
     },

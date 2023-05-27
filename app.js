@@ -1,3 +1,6 @@
+// Импорт модуля dotenv для добавления переменных окружения в process.env
+require('dotenv').config();
+
 // Импорт npm-пакетов
 const express = require('express');
 const mongoose = require('mongoose');
@@ -9,6 +12,7 @@ const helmet = require('helmet');
 const errorHandler = require('./middlewares/errorHandler');
 const limiter = require('./middlewares/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const corsHandler = require('./middlewares/corsHandler');
 
 // Импорт роутера
 const router = require('./routes/index');
@@ -21,6 +25,8 @@ const app = express();
 mongoose.connect(DB, {
   useNewUrlParser: true,
 });
+
+app.use(corsHandler);
 
 // Миддлвэры для безопасности (лимитер и хельмет)
 app.use(limiter);
