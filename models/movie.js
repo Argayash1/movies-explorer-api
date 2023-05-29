@@ -20,6 +20,7 @@ const movieSchema = new mongoose.Schema(
     year: {
       type: String,
       required: [true, 'не передан год создания фильма'],
+      minlength: [4, 'длина обозначения года должно быть не менее 4 символов'],
     },
     description: {
       type: String,
@@ -64,11 +65,11 @@ const movieSchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
-      required: [true, 'не передано  _id пользователя, который сохранил фильм'],
+      required: [true, 'не передан _id пользователя, который сохранил фильм'],
     },
     movieId: {
       type: Number,
-      required: [true, 'не передано id фильма'],
+      required: [true, 'не передан id фильма'],
     },
     nameRU: {
       type: String,

@@ -1,4 +1,6 @@
-// Миддлвэр для центриализованной обработки ошибок
+const { SERVER_ERROR_MESSAGE } = require('../utils/constants');
+
+// Миддлвэр для централизованной обработки ошибок
 const errorHandler = (err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, message } = err;
@@ -8,7 +10,7 @@ const errorHandler = (err, req, res, next) => {
     .send({
       // проверяем статус и выставляем сообщение в зависимости от него
       message: statusCode === 500
-        ? 'На сервере произошла ошибка'
+        ? SERVER_ERROR_MESSAGE
         : message,
     });
   next();

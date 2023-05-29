@@ -10,11 +10,20 @@ const ForbiddenError = require('../errors/ForbiddenError');
 const Movie = require('../models/movie');
 
 // Импорт статус-кодов ошибок
-const { CREATED_201 } = require('../utils/constants');
+const {
+  CREATED_201,
+  VALIDATION_ERROR_MESSAGE,
+  FILM_NOT_FOUND_ERROR_MESSAGE,
+  FORBIDDEN_ERROR_MESSAGE,
+  DELETE_MOVIE_MESSAGE,
+  CAST_INCORRECT_MOVIEID_ERROR_MESSAGE,
+} = require('../utils/constants');
 
 // Функция, которая возвращает все сохранённые текущим  пользователем фильмы
 const getMovies = (req, res, next) => {
-  Movie.find({})
+  const { _id: userId } = req.user;
+
+  Movie.find({ owner: userId })
     .populate(['owner'])
     .then((movies) => res.send(movies))
     .catch(next);
@@ -60,7 +69,7 @@ const createMovie = (req, res, next) => {
         const errorMessage = Object.values(err.errors)
           .map((error) => error.message)
           .join(', ');
-        next(new BadRequestError(`Некорректные данные: ${errorMessage}`));
+        next(new BadRequestError(`${VALIDATION_ERROR_MESSAGE} ${errorMessage}`));
       } else {
         next(err);
       }
@@ -75,17 +84,17 @@ const deleteMovieById = (req, res, next) => {
   Movie.findById(movieId)
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError('Такого фильма нет');
+        throw new NotFoundError(FILM_NOT_FOUND_ERROR_MESSAGE);
       }
       if (userId !== movie.owner.toString()) {
-        throw new ForbiddenError('Можно удалять только собственные посты');
+        throw new ForbiddenError(FORBIDDEN_ERROR_MESSAGE);
       }
       return Movie.findByIdAndRemove(movieId)
-        .then(() => res.send({ message: 'Пост удалён' }));
+        .then(() => res.send({ message: DELETE_MOVIE_MESSAGE }));
     })
     .catch((err) => {
       if (err instanceof CastError) {
-        next(new BadRequestError('Некорректный Id фильма'));
+        next(new BadRequestError(CAST_INCORRECT_MOVIEID_ERROR_MESSAGE));
       } else {
         next(err);
       }

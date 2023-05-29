@@ -14,7 +14,15 @@ const ConflictError = require('../errors/ConflictError');
 const User = require('../models/user'); // импортируем модель user
 
 // Импорт статус-кодов ошибок
-const { CREATED_201 } = require('../utils/constants');
+const {
+  CREATED_201,
+  VALIDATION_ERROR_MESSAGE,
+  CONFLICT_ERROR_MESSAGE,
+  LOGIN_MESSAGE,
+  LOGOUT_MESSAGE,
+  USER_NOT_FOUND_ERROR_MESSAGE,
+  CAST_INCORRECT_USERID_ERROR_MESSAGE,
+} = require('../utils/constants');
 
 // Импорт переменной секретного ключа
 const { JWT_SECRET } = require('../utils/config');
@@ -45,14 +53,14 @@ const createUser = (req, res, next) => {
     // данные не записались, вернём ошибку
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
+        next(new ConflictError(CONFLICT_ERROR_MESSAGE));
         return;
       }
       if (err instanceof ValidationError) {
         const errorMessage = Object.values(err.errors)
           .map((error) => error.message)
           .join(', ');
-        next(new BadRequestError(`Некорректные данные: ${errorMessage}`));
+        next(new BadRequestError(`${VALIDATION_ERROR_MESSAGE} ${errorMessage}`));
       } else {
         next(err);
       }
@@ -75,13 +83,13 @@ const login = (req, res, next) => {
         sameSite: true, // указали браузеру посылать куки, только если запрос с того же домена
       })
       // отправим токен пользователю
-        .send({ message: 'Успешная авторизация' });
+        .send({ message: LOGIN_MESSAGE });
     })
     .catch(next);
 };
 
 const logout = (req, res) => {
-  res.clearCookie('jwt').send({ message: 'Вы вышли из системы' });
+  res.clearCookie('jwt').send({ message: LOGOUT_MESSAGE });
 };
 
 // Функция, которая обновляет данные пользователя
@@ -100,24 +108,24 @@ const updateUserData = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Такого пользователя нет');
+        throw new NotFoundError(USER_NOT_FOUND_ERROR_MESSAGE);
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
+        next(new ConflictError(CONFLICT_ERROR_MESSAGE));
         return;
       }
       if (err instanceof ValidationError) {
         const errorMessage = Object.values(err.errors)
           .map((error) => error.message)
           .join(', ');
-        next(new BadRequestError(`Некорректные данные: ${errorMessage}`));
+        next(new BadRequestError(`${VALIDATION_ERROR_MESSAGE} ${errorMessage}`));
         return;
       }
       if (err instanceof CastError) {
-        next(new BadRequestError('Некорректный Id пользователя'));
+        next(new BadRequestError(CAST_INCORRECT_USERID_ERROR_MESSAGE));
       } else {
         next(err);
       }

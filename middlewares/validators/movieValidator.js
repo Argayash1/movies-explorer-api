@@ -7,7 +7,7 @@ const movieDataValidator = celebrate({
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().required(),
-    year: Joi.string().required(),
+    year: Joi.string().required().min(4),
     description: Joi.string().required(),
     image: Joi.string().required().regex(regEx),
     trailerLink: Joi.string().required().regex(regEx),
