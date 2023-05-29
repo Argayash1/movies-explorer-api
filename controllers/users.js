@@ -16,6 +16,7 @@ const User = require('../models/user'); // импортируем модель u
 // Импорт статус-кодов ошибок
 const {
   CREATED_201,
+  DUPLICATION_11000,
   VALIDATION_ERROR_MESSAGE,
   CONFLICT_ERROR_MESSAGE,
   LOGIN_MESSAGE,
@@ -29,7 +30,7 @@ const { JWT_SECRET } = require('../utils/config');
 
 // Функция, которая возвращает информацию о пользователе (email и имя)
 const getCurrentUserInfo = (req, res, next) => {
-  const userId = req.user._id;
+  const { _id: userId } = req.user;
 
   User.findById(userId)
     .then((user) => res.send(user))
@@ -38,9 +39,7 @@ const getCurrentUserInfo = (req, res, next) => {
 
 // Функция (контроллер) регистрации, которая создаёт пользователя
 const createUser = (req, res, next) => {
-  const {
-    email, password, name,
-  } = req.body;
+  const { email, password, name } = req.body;
   // хешируем пароль
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
@@ -52,7 +51,7 @@ const createUser = (req, res, next) => {
     .then((user) => res.status(CREATED_201).send({ data: user }))
     // данные не записались, вернём ошибку
     .catch((err) => {
-      if (err.code === 11000) {
+      if (err.code === DUPLICATION_11000) {
         next(new ConflictError(CONFLICT_ERROR_MESSAGE));
         return;
       }

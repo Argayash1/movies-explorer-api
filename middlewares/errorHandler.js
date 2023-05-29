@@ -1,4 +1,4 @@
-const { SERVER_ERROR_MESSAGE } = require('../utils/constants');
+const { INTERNAL_SERVER_ERROR_500, SERVER_ERROR_MESSAGE } = require('../utils/constants');
 
 // Миддлвэр для централизованной обработки ошибок
 const errorHandler = (err, req, res, next) => {
@@ -9,7 +9,7 @@ const errorHandler = (err, req, res, next) => {
     .status(statusCode)
     .send({
       // проверяем статус и выставляем сообщение в зависимости от него
-      message: statusCode === 500
+      message: statusCode === INTERNAL_SERVER_ERROR_500
         ? SERVER_ERROR_MESSAGE
         : message,
     });
