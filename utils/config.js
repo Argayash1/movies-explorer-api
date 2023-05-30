@@ -1,6 +1,6 @@
 const {
   NODE_ENV,
-  PORT = 3001,
+  PORT = 3000,
   DB,
   JWT_SECRET,
 } = process.env;
