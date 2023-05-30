@@ -1,7 +1,7 @@
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'https://mesto2023.students.nomoredomains.monster',
-  'http://mesto2023.students.nomoredomains.monster',
+  'https://argayash-movies-explorer.nomoredomains.rocks/',
+  'http://argayash-movies-explorer.nomoredomains.rocks/',
   'https://localhost:3000',
   'http://localhost:3000',
 ];
