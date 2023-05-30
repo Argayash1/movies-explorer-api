@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 
 // Импорт переменной секретного ключа
-const { JWT_SECRET } = require('../utils/config');
+const { NODE_ENV, JWT_SECRET, JWT_SECRET_DEV } = require('../utils/config');
 
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
 
   try {
     // попытаемся верифицировать токен
-    payload = jwt.verify(token, JWT_SECRET);
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET_DEV);
   } catch (err) {
     // отправим ошибку, если не получилось
     return next(new UnauthorizedError(UNAUTHORIZED_ERROR_MESSAGE));
