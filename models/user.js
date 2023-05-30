@@ -7,16 +7,24 @@ const isEmail = require('validator/lib/isEmail');
 
 // Импорт классов ошибок
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const { INCORRECT_USERDATA_MESSAGE } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema(
   {
+    name: {
+    // у пользователя есть имя — опишем требования к имени в схеме:
+      type: String, // имя — это строка
+      minlength: [2, 'длина имени пользователя должна быть не менее 2 символов'], // минимальная длина имени — 2 символа
+      maxlength: [30, 'длина имени пользователя должна быть не более 30 символов'], // а максимальная — 30 символов
+      required: [true, 'не передано имя пользователя'], // оно должно быть у каждого пользователя, так что e-mail — обязательное поле
+    },
     email: {
       type: String,
       required: [true, 'не передан e-mail пользователя'], // оно должно быть у каждого пользователя, так что e-mail — обязательное поле
       unique: true,
       validate: {
-        // validator - функция проверки данных. v - значение свойства e-mail
-        // если адрес e-mail не будет соответствовать формату, вернётся false
+      // validator - функция проверки данных. v - значение свойства e-mail
+      // если адрес e-mail не будет соответствовать формату, вернётся false
         validator: (email) => isEmail(email),
         message: 'e-mail не соответствует формату', // когда validator вернёт false, будет использовано это сообщение
       },
@@ -24,14 +32,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'не передан пароль пользователя'], // оно должно быть у каждого пользователя, так что пароль — обязательное поле
-      minlength: 8,
       select: false,
-    },
-    name: {
-      // у пользователя есть имя — опишем требования к имени в схеме:
-      type: String, // имя — это строка
-      minlength: [2, 'длина имени пользователя должна быть не менее 2 символов'], // минимальная длина имени — 2 символа
-      maxlength: [30, 'длина имени пользователя должна быть не более 30 символов'], // а максимальная — 30 символов
     },
   },
   // делаем, чтобы пароль не отправлялся при регистрации и отключаем поле "__v"
@@ -47,13 +48,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .then((user) => {
       // не нашёлся — отклоняем промис
       if (!user) {
-        return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
+        return Promise.reject(new UnauthorizedError(INCORRECT_USERDATA_MESSAGE));
       }
       // нашёлся — сравниваем хеши
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
+            return Promise.reject(new UnauthorizedError(INCORRECT_USERDATA_MESSAGE));
           }
           return user; // теперь user доступен
         });

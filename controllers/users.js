@@ -26,7 +26,7 @@ const {
 } = require('../utils/constants');
 
 // Импорт переменной секретного ключа
-const { JWT_SECRET } = require('../utils/config');
+const { NODE_ENV, JWT_SECRET, JWT_SECRET_DEV } = require('../utils/config');
 
 // Функция, которая возвращает информацию о пользователе (email и имя)
 const getCurrentUserInfo = (req, res, next) => {
@@ -73,7 +73,11 @@ const login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       // создадим токен
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET_DEV,
+        { expiresIn: '7d' },
+      );
       // отправим токен, браузер сохранит его в куках
       res.cookie('jwt', token, {
         // token - наш JWT токен, который мы отправляем

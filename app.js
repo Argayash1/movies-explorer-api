@@ -17,28 +17,29 @@ const corsHandler = require('./middlewares/corsHandler');
 // Импорт роутера
 const router = require('./routes/index');
 
-const { PORT, DB } = require('./utils/config');
+const {
+  NODE_ENV, PORT, DB, DB_DEV,
+} = require('./utils/config');
 
 const app = express();
 
 // подключаемся к серверу mongo
-mongoose.connect(DB, {
+mongoose.connect(NODE_ENV === 'production' ? DB : DB_DEV, {
   useNewUrlParser: true,
 });
 
-app.use(corsHandler);
+// Миддлвэр для логирования запросов
+app.use(requestLogger); // подключаем логгер запросов
 
-// Миддлвэры для безопасности (лимитер и хельмет)
+// Миддлвэры для безопасности (лимитер, хельмет и корс-обработчик)
 app.use(limiter);
 app.use(helmet());
+app.use(corsHandler);
 
 // Миддлвэры для парсинга
 app.use(express.json()); // для собирания JSON-формата
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // подключаем парсер кук как мидлвэр
-
-// Миддлвэр-логгер запросов
-app.use(requestLogger); // подключаем логгер запросов
 
 // Роутер
 app.use(router);

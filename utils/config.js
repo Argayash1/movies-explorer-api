@@ -1,11 +1,18 @@
 const {
+  NODE_ENV,
   PORT = 3001,
-  DB = 'mongodb://127.0.0.1:27017/bitfilmsdb',
-  JWT_SECRET = 'a1d731321cb2024fe9dfa90167bc4b40c2eefd1a4975d641f3d1484f71f5868c',
+  DB,
+  JWT_SECRET,
 } = process.env;
 
+const DB_DEV = 'mongodb://127.0.0.1:27017/bitfilmsdb';
+const JWT_SECRET_DEV = 'dev-key';
+
 module.exports = {
+  NODE_ENV,
   PORT,
   DB,
   JWT_SECRET,
+  DB_DEV,
+  JWT_SECRET_DEV,
 };

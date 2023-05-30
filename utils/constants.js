@@ -14,7 +14,9 @@ const DUPLICATION_11000 = 11000;
 
 const SERVER_ERROR_MESSAGE = 'На сервере произошла ошибка';
 const VALIDATION_ERROR_MESSAGE = 'Некорректные данные:';
+const UNAUTHORIZED_ERROR_MESSAGE = 'С токеном что-то не так';
 
+const INCORRECT_USERDATA_MESSAGE = 'Неправильные почта или пароль';
 const CONFLICT_ERROR_MESSAGE = 'Пользователь с таким email уже зарегистрирован';
 const LOGIN_MESSAGE = 'Успешная авторизация';
 const LOGOUT_MESSAGE = 'Вы вышли из системы';
@@ -39,6 +41,8 @@ module.exports = {
   DUPLICATION_11000,
   SERVER_ERROR_MESSAGE,
   VALIDATION_ERROR_MESSAGE,
+  INCORRECT_USERDATA_MESSAGE,
+  UNAUTHORIZED_ERROR_MESSAGE,
   CONFLICT_ERROR_MESSAGE,
   LOGIN_MESSAGE,
   LOGOUT_MESSAGE,

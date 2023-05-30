@@ -1,7 +1,8 @@
 // Импорт пакетов
 const mongoose = require('mongoose'); // импортируем mongoose
 
-const { regEx } = require('../utils/constants');
+// Импорт валидатора URL
+const isUrl = require('validator/lib/isURL');
 
 const movieSchema = new mongoose.Schema(
   {
@@ -20,7 +21,6 @@ const movieSchema = new mongoose.Schema(
     year: {
       type: String,
       required: [true, 'не передан год создания фильма'],
-      minlength: [4, 'длина обозначения года должно быть не менее 4 символов'],
     },
     description: {
       type: String,
@@ -31,11 +31,10 @@ const movieSchema = new mongoose.Schema(
       required: [true, 'не передана ссылка на постер фильма'],
       validate: {
         // validator - функция проверки данных. v - значение свойства e-mail
-        // если адрес e-mail не будет соответствовать формату, вернётся false
-        validator(url) {
-          return regEx.test(url);
-        },
-        message: 'ссылка не соответствует формату', // когда validator вернёт false, будет использовано это сообщение
+        // если url не соответствует формату, вернётся false
+        validator: (url) => isUrl(url, { protocols: ['http', 'https'], require_protocol: true }),
+        // когда validator вернёт false, будет использовано это сообщение
+        message: 'некорректный формат ссылки на постер к фильму',
       },
     },
     trailerLink: {
@@ -43,11 +42,10 @@ const movieSchema = new mongoose.Schema(
       required: [true, 'не передана ссылка на трейлер фильма'],
       validate: {
         // validator - функция проверки данных. v - значение свойства e-mail
-        // если адрес e-mail не будет соответствовать формату, вернётся false
-        validator(url) {
-          return regEx.test(url);
-        },
-        message: 'ссылка не соответствует формату', // тогда validator вернёт false, будет использовано это сообщение
+        // если url не соответствует формату, вернётся false
+        validator: (url) => isUrl(url, { protocols: ['http', 'https'], require_protocol: true }),
+        // тогда validator вернёт false, будет использовано это сообщение
+        message: 'некорректный формат ссылки на трейлер фильма',
       },
     },
     thumbnail: {
@@ -55,11 +53,10 @@ const movieSchema = new mongoose.Schema(
       required: [true, 'не передана ссылка на миниатюрное изображение постера к фильму'],
       validate: {
         // validator - функция проверки данных. v - значение свойства e-mail
-        // если адрес e-mail не будет соответствовать формату, вернётся false
-        validator(url) {
-          return regEx.test(url);
-        },
-        message: 'ссылка не соответствует формату', // когда validator вернёт false, будет использовано это сообщение
+        // если url не соответствует формату, вернётся false
+        validator: (url) => isUrl(url, { protocols: ['http', 'https'], require_protocol: true }),
+        // когда validator вернёт false, будет использовано это сообщение
+        message: 'некорректный формат ссылки на миниатюрное изображение постера к фильму',
       },
     },
     owner: {
