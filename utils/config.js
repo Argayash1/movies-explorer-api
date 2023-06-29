@@ -1,9 +1,4 @@
-const {
-  NODE_ENV,
-  PORT = 3000,
-  DB,
-  JWT_SECRET,
-} = process.env;
+const { NODE_ENV, PORT = 3001, DB, JWT_SECRET } = process.env;
 
 const DB_DEV = 'mongodb://127.0.0.1:27017/bitfilmsdb';
 const JWT_SECRET_DEV = 'dev-key';

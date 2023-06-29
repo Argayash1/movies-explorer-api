@@ -39,9 +39,10 @@ const getCurrentUserInfo = (req, res, next) => {
 
 // Функция (контроллер) регистрации, которая создаёт пользователя
 const createUser = (req, res, next) => {
-  const { email, password, name } = req.body;
+  const { name, email, password } = req.body;
   // хешируем пароль
-  bcrypt.hash(password, 10)
+  bcrypt
+    .hash(password, 10)
     .then((hash) => User.create({
       email,
       password: hash, // записываем хеш в базу
@@ -73,19 +74,19 @@ const login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       // создадим токен
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET_DEV,
-        { expiresIn: '7d' },
-      );
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET_DEV, {
+        expiresIn: '7d',
+      });
       // отправим токен, браузер сохранит его в куках
-      res.cookie('jwt', token, {
-        // token - наш JWT токен, который мы отправляем
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-        sameSite: true, // указали браузеру посылать куки, только если запрос с того же домена
-      })
-      // отправим токен пользователю
+      res
+        .cookie('jwt', token, {
+          // token - наш JWT токен, который мы отправляем
+          maxAge: 3600000 * 24 * 7,
+          httpOnly: true,
+          sameSite: 'none',
+          secure: true,
+        })
+        // отправим токен пользователю
         .send({ message: LOGIN_MESSAGE });
     })
     .catch(next);
