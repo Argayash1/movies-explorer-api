@@ -93,7 +93,7 @@ const login = (req, res, next) => {
 };
 
 const logout = (req, res) => {
-  res.clearCookie('jwt').send({ message: LOGOUT_MESSAGE });
+  res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true }).send({ message: LOGOUT_MESSAGE });
 };
 
 // Функция, которая обновляет данные пользователя
