@@ -84,7 +84,7 @@ const login = (req, res, next) => {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
           sameSite: 'none',
-          secure: true,
+          secure: true, // указали браузеру посылать куки, только если запрос с того же домена
         })
         // отправим токен пользователю
         .send({ message: LOGIN_MESSAGE });
